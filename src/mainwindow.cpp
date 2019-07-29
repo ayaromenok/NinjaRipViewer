@@ -12,8 +12,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setGeometry(0,0,960,540);
 
-    //createMenus();
-    //createToolbars();
     createCentralWidget();
     createActions();
     createDockWidgets();
@@ -29,22 +27,6 @@ MainWindow::~MainWindow()
     //saveState();
     _settings->setValue("geometry", saveGeometry());
     _settings->setValue("windowState", saveState());
-}
-
-void
-MainWindow::createMenus()
-{
-    auto fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(tr("New"));
-    fileMenu->addAction(tr("Exit"));
-}
-
-void
-MainWindow::createToolbars()
-{
-    auto fileToolBar = addToolBar(tr("&File"));
-    fileToolBar->addAction(tr("New"));
-    fileToolBar->addAction(tr("Exit"));
 }
 
 void
@@ -79,7 +61,6 @@ MainWindow::createCentralWidget()
     _viewP = new View(this);
     _viewP->setRootEntity(root);
     _viewP->setCamPersp();
-    _viewP->captureToFile();
 
     //loutCentral->addWidget(new QGroupBox(tr("Front"), this), 0, 0);
     loutCentral->addWidget(_viewP, 0, 0);
@@ -92,13 +73,14 @@ void
 MainWindow::createActions()
 {
     auto fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(tr("New"));
-    fileMenu->addAction(tr("Exit"));
 
     auto fileToolBar = addToolBar(tr("&File"));
     fileToolBar->setObjectName("FileToolBar");
-    fileToolBar->addAction(tr("New"));
-    fileToolBar->addAction(tr("Exit"));
+
+    QAction *actExit = new QAction("E&xit", this);
+    connect(actExit, &QAction::triggered, qApp, &QApplication::quit );
+    fileMenu->addAction(actExit);
+    fileToolBar->addAction(actExit);
 
     QAction *actCapture = new QAction("Capture", this);
     connect(actCapture, &QAction::triggered, _viewP, &View::captureToFile);
