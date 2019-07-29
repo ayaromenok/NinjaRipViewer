@@ -4,7 +4,9 @@
 #include <Qt3DCore>
 
 #include "view.h"
+#include "yripparser.h"
 #include "ytestscene.h"
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -19,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     _settings = new QSettings(this);
     restoreGeometry(_settings->value("geometry").toByteArray());
     restoreState(_settings->value("windowState").toByteArray());
+
     //restoreState();
 }
 
@@ -76,6 +79,9 @@ MainWindow::openFile()
     QStringList fNames = QFileDialog::getOpenFileNames(this, tr("Open Ninja RIP file"),
                                          "~", tr("Ninja RIP (*.rip)"));
     qInfo() << "open files:" << fNames.length() << "\n" << fNames;
+    Qt3DCore::QEntity *root = new Qt3DCore::QEntity();
+    _parser = new YRipParser(root);
+    _viewP->setRootEntity(root);
 }
 
 void

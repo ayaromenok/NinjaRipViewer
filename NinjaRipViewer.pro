@@ -10,10 +10,12 @@ SOURCES += \
         src/main.cpp \
         src/mainwindow.cpp \
         src/view.cpp\
+        src/yripparser.cpp \
         src/ytestscene.cpp
 HEADERS += \
         src/mainwindow.h \
         src/view.h \
+        src/yripparser.h \
         src/ytestscene.h
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
