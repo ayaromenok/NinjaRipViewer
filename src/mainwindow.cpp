@@ -77,7 +77,7 @@ MainWindow::openFile()
 {
     //_fName.clear();
     QStringList fNames = QFileDialog::getOpenFileNames(this, tr("Open Ninja RIP file"),
-                                         "~", tr("Ninja RIP (*.rip)"));
+                                         "~", tr("Ninja RIP (*.rip);;Wavefront OBJ (*.obj);;All Files (*.*)"));
     qInfo() << "open files:" << fNames.length() << "\n" << fNames;
     Qt3DCore::QEntity *root = new Qt3DCore::QEntity();
     _parser = new YRipParser(root);
