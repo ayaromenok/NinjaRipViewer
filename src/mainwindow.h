@@ -4,6 +4,7 @@
 #include <QMainWindow>
 class QSettings;
 class YTestScene;
+class View;
 
 class MainWindow : public QMainWindow
 {
@@ -17,9 +18,11 @@ private:
     void createToolbars();
     void createDockWidgets();
     void createCentralWidget();
+    void createActions();
 
     QSettings   *_settings;
     YTestScene  *_testScene;
+    View*       _viewP;
 };
 
 #endif // MAINWINDOW_H

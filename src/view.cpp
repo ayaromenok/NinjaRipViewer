@@ -29,6 +29,10 @@ View::View(QWidget *parent) : QWidget(parent) {
     _camCtrl = new Qt3DExtras::QOrbitCameraController(_root);
     _camCtrl->setCamera(_view->camera());
 
+    _capture = new Qt3DRender::QRenderCapture;
+    _view->activeFrameGraph()->setParent(_capture);
+    _view->setActiveFrameGraph(_capture);
+
 }
 
 void
@@ -81,5 +85,22 @@ View::setCamLeft() {
     cameraEntity->setPosition(QVector3D(20.0f, 0, 0));
     cameraEntity->setUpVector(QVector3D(0, 1, 0));
     cameraEntity->setViewCenter(QVector3D(0, 0, 0));
+}
+
+void
+View::captureToFile()
+{
+    qInfo("Capturing to file");
+
+    Qt3DRender::QRenderCaptureReply *reply = _capture->requestCapture();
+    if (reply) {
+        QPixmap pixmap = QPixmap::fromImage(reply->image());
+        qInfo() << "pixmap size" << pixmap.width() << pixmap.height();
+        if ((pixmap.width() > 0) & (pixmap.height() > 0)){
+            pixmap.save("capture.jpg");
+        }
+    } else {
+        qInfo("Capture is NoK");
+    };
 }
 

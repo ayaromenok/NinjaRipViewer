@@ -12,10 +12,11 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setGeometry(0,0,960,540);
 
-    createMenus();
-    createToolbars();
-    createDockWidgets();
+    //createMenus();
+    //createToolbars();
     createCentralWidget();
+    createActions();
+    createDockWidgets();
     statusBar()->showMessage(tr("StatusBar message"));
     _settings = new QSettings(this);
     restoreGeometry(_settings->value("geometry").toByteArray());
@@ -50,13 +51,15 @@ void
 MainWindow::createDockWidgets()
 {
     QDockWidget *dockWidget = new QDockWidget(tr("Dock Widget"), this);
+    dockWidget->setObjectName("Dock Widget");
     dockWidget->setAllowedAreas(Qt::LeftDockWidgetArea |
                                 Qt::RightDockWidgetArea);
     QGroupBox *gbLeft = new QGroupBox(tr("gbLeft"), this);
     dockWidget->setWidget(gbLeft);
     addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
 
-    QDockWidget *dockWidgetR = new QDockWidget(tr("Dock Widget"), this);
+    QDockWidget *dockWidgetR = new QDockWidget(tr("Dock Widget Right"), this);
+    dockWidgetR->setObjectName("Dock Widget Right");
     dockWidgetR->setAllowedAreas(Qt::LeftDockWidgetArea |
                                 Qt::RightDockWidgetArea);
     QGroupBox *gbRight = new QGroupBox(tr("gbRight"), this);
@@ -73,13 +76,34 @@ MainWindow::createCentralWidget()
     Qt3DCore::QEntity *root = new Qt3DCore::QEntity();
    _testScene = new YTestScene(root);
 
-    View* _viewP = new View(this);
+    _viewP = new View(this);
     _viewP->setRootEntity(root);
     _viewP->setCamPersp();
+    _viewP->captureToFile();
 
     //loutCentral->addWidget(new QGroupBox(tr("Front"), this), 0, 0);
     loutCentral->addWidget(_viewP, 0, 0);
     wdCentral->setLayout(loutCentral);
 
     setCentralWidget(wdCentral);
+}
+
+void
+MainWindow::createActions()
+{
+    auto fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(tr("New"));
+    fileMenu->addAction(tr("Exit"));
+
+    auto fileToolBar = addToolBar(tr("&File"));
+    fileToolBar->setObjectName("FileToolBar");
+    fileToolBar->addAction(tr("New"));
+    fileToolBar->addAction(tr("Exit"));
+
+    QAction *actCapture = new QAction("Capture", this);
+    connect(actCapture, &QAction::triggered, _viewP, &View::captureToFile);
+    fileMenu->addSeparator();
+    fileMenu->addAction(actCapture);
+    fileToolBar->addSeparator();
+    fileToolBar->addAction(actCapture);
 }
