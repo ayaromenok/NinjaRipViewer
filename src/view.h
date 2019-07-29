@@ -31,7 +31,7 @@ private:
 
     Qt3DExtras::Qt3DWindow          *_view;
     Qt3DCore::QEntity               *_root;
-    YTestScene                      *_sceneTest;
+//    YTestScene                      *_sceneTest;
 };
 
 #endif // VIEW_H

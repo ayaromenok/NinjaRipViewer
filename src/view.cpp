@@ -1,5 +1,5 @@
 #include "view.h"
-#include "ytestscene.h"
+//#include "ytestscene.h"
 
 #include <QtWidgets>
 

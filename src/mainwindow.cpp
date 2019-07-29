@@ -4,7 +4,7 @@
 #include <Qt3DCore>
 
 #include "view.h"
-//#include "ytestscene.h"
+#include "ytestscene.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -71,7 +71,7 @@ MainWindow::createCentralWidget()
     QGridLayout *loutCentral = new QGridLayout(wdCentral);
 
     Qt3DCore::QEntity *root = new Qt3DCore::QEntity();
-//    _testScene = new YTestScene(root);
+   _testScene = new YTestScene(root);
 
     View* _viewP = new View(this);
     _viewP->setRootEntity(root);
