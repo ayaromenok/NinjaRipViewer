@@ -12,6 +12,7 @@ namespace Qt3DCore {
 };
 namespace Qt3DRender {
     class QRenderCapture;
+    class QRenderCaptureReply;
 }
 
 class YTestScene;
@@ -32,12 +33,18 @@ public slots:
     void                            setRootEntity(Qt3DCore::QEntity *root);
     void                            captureToFile();
 
+private slots:
+    void                            onCaptureCompleted();
+
 private:
+
 
     Qt3DExtras::Qt3DWindow              *_view;
     Qt3DCore::QEntity                   *_root;
     Qt3DExtras::QOrbitCameraController  *_camCtrl;
     Qt3DRender::QRenderCapture          *_capture;
+    Qt3DRender::QRenderCaptureReply     *_captureReply;
+    QString                             _fNameScr;
 };
 
 #endif // VIEW_H

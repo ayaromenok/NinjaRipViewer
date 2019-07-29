@@ -90,17 +90,28 @@ View::setCamLeft() {
 void
 View::captureToFile()
 {
-    qInfo("Capturing to file");
+    _captureReply = _capture->requestCapture();
+    QObject::connect(_captureReply, &Qt3DRender::QRenderCaptureReply::completed,
+                                              this, &View::onCaptureCompleted);
+}
 
-    Qt3DRender::QRenderCaptureReply *reply = _capture->requestCapture();
-    if (reply) {
-        QPixmap pixmap = QPixmap::fromImage(reply->image());
-        qInfo() << "pixmap size" << pixmap.width() << pixmap.height();
-        if ((pixmap.width() > 0) & (pixmap.height() > 0)){
-            pixmap.save("capture.jpg");
+void
+View::onCaptureCompleted() {
+    QDateTime dt;
+    _fNameScr.clear();
+    _fNameScr.append("screenshot");
+    _fNameScr.append(QString::number(_captureReply->captureId()));
+    _fNameScr.append(".jpg");
+
+    if (_captureReply->isComplete()) {
+        if (_captureReply->saveImage(_fNameScr)) {
+            qInfo() << "image saved" << _fNameScr;
+        } else {
+            qInfo() << "Can't save image";
         }
     } else {
         qInfo("Capture is NoK");
     };
+    delete _captureReply;
+    _captureReply = nullptr;
 }
-
