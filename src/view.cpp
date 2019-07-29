@@ -1,5 +1,4 @@
 #include "view.h"
-//#include "ytestscene.h"
 
 #include <QtWidgets>
 
@@ -23,12 +22,19 @@ View::View(QWidget *parent) : QWidget(parent) {
 
     Qt3DInput::QInputAspect *input = new Qt3DInput::QInputAspect();
     _view->registerAspect(input);
+
+    _root = new Qt3DCore::QEntity();
+    _view->setRootEntity(_root);
+
+    _camCtrl = new Qt3DExtras::QOrbitCameraController(_root);
+    _camCtrl->setCamera(_view->camera());
+
 }
 
 void
 View::setRootEntity(Qt3DCore::QEntity *root){
     if(root) {
-        _view->setRootEntity(root);
+        root->setParent(_root);
         qDebug() << "OK";
      }
     else {
@@ -45,6 +51,8 @@ View::setCamPersp() {
     cameraEntity->setPosition(QVector3D(3.0f, 5.0f, 5.0f));
     cameraEntity->setUpVector(QVector3D(0, 1, 0));
     cameraEntity->setViewCenter(QVector3D(0, 0, 0));
+
+
 }
 
 void

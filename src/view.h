@@ -5,6 +5,7 @@
 
 namespace Qt3DExtras {
     class Qt3DWindow;
+    class QOrbitCameraController;
 };
 namespace Qt3DCore {
     class QEntity;
@@ -29,9 +30,9 @@ public slots:
 
 private:
 
-    Qt3DExtras::Qt3DWindow          *_view;
-    Qt3DCore::QEntity               *_root;
-//    YTestScene                      *_sceneTest;
+    Qt3DExtras::Qt3DWindow              *_view;
+    Qt3DCore::QEntity                   *_root;
+    Qt3DExtras::QOrbitCameraController  *_camCtrl;
 };
 
 #endif // VIEW_H
