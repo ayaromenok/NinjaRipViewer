@@ -13,6 +13,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+public slots:
+    void openFile();
+
 private:
 
     void createDockWidgets();
@@ -21,7 +24,8 @@ private:
 
     QSettings   *_settings;
     YTestScene  *_testScene;
-    View*       _viewP;
+    View        *_viewP;
+    QString     _fName;
 };
 
 #endif // MAINWINDOW_H

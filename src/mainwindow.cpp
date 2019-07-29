@@ -70,6 +70,15 @@ MainWindow::createCentralWidget()
 }
 
 void
+MainWindow::openFile()
+{
+    //_fName.clear();
+    QStringList fNames = QFileDialog::getOpenFileNames(this, tr("Open Ninja RIP file"),
+                                         "~", tr("Ninja RIP (*.rip)"));
+    qInfo() << "open files:" << fNames.length() << "\n" << fNames;
+}
+
+void
 MainWindow::createActions()
 {
     auto fileMenu = menuBar()->addMenu(tr("&File"));
@@ -77,14 +86,22 @@ MainWindow::createActions()
     auto fileToolBar = addToolBar(tr("&File"));
     fileToolBar->setObjectName("FileToolBar");
 
+
+    QAction *actOpen = new QAction("&Open", this);
+    connect(actOpen, &QAction::triggered, this, &MainWindow::openFile );
+    fileMenu->addAction(actOpen);
+    fileToolBar->addAction(actOpen);
+    fileMenu->addSeparator();
+
+
     QAction *actExit = new QAction("E&xit", this);
     connect(actExit, &QAction::triggered, qApp, &QApplication::quit );
     fileMenu->addAction(actExit);
     fileToolBar->addAction(actExit);
+    fileMenu->addSeparator();
 
     QAction *actCapture = new QAction("Capture", this);
-    connect(actCapture, &QAction::triggered, _viewP, &View::captureToFile);
-    fileMenu->addSeparator();
+    connect(actCapture, &QAction::triggered, _viewP, &View::captureToFile);    
     fileMenu->addAction(actCapture);
     fileToolBar->addSeparator();
     fileToolBar->addAction(actCapture);
