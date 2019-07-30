@@ -58,11 +58,8 @@ MainWindow::createCentralWidget()
     QWidget     *wdCentral = new QWidget(this);
     QGridLayout *loutCentral = new QGridLayout(wdCentral);
 
-    Qt3DCore::QEntity *root = new Qt3DCore::QEntity();
-   _testScene = new YTestScene(root);
 
     _viewP = new View(this);
-   // _viewP->setRootEntity(root);
     _viewP->setCamPersp();
 
     //loutCentral->addWidget(new QGroupBox(tr("Front"), this), 0, 0);
@@ -75,12 +72,16 @@ MainWindow::createCentralWidget()
 void
 MainWindow::openFile()
 {
-    //_fName.clear();
     QStringList fNames = QFileDialog::getOpenFileNames(this, tr("Open Ninja RIP file"),
                                          "~", tr("Ninja RIP (*.rip);;Wavefront OBJ (*.obj);;All Files (*.*)"));
     qInfo() << "open files:" << fNames.length() << "\n" << fNames;
     Qt3DCore::QEntity *root = new Qt3DCore::QEntity();
     _parser = new YRipParser(root);
+    if (_parser->parseFile(fNames.at(0))) {
+        _parser->fileInfo();
+    } else {
+        _testScene = new YTestScene(root);
+    }
     _viewP->setRootEntity(root);
 }
 

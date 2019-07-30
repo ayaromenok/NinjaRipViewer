@@ -8,9 +8,13 @@ class YRipParser : public Qt3DCore::QEntity
 {
 public:
     YRipParser(Qt3DCore::QEntity *parent);
+    ~YRipParser();
+    bool parseFile(const QString &fileName);
+    void fileInfo();
 
 private:
     Qt3DCore::QEntity           *_parent;
+    QString                     _fileName;
 };
 
 #endif // YRIPPARSER_H
