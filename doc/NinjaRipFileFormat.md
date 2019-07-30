@@ -2,7 +2,7 @@
 
 #### Main
 4 : magic number DE AD C0 DE
-4 : face count
+4 : # of vertex in face (3 or 4)
 4 : vertex count
 4 : vertex size
 4 : # of textures

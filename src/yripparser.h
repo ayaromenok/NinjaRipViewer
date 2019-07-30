@@ -2,6 +2,7 @@
 #define YRIPPARSER_H
 
 #include <QObject>
+#include <QFile>
 #include <Qt3DCore/QEntity>
 
 class YRipParser : public Qt3DCore::QEntity
@@ -13,6 +14,7 @@ public:
     void fileInfo();
 
 private:
+    bool parseRipFileBody(QFile &file);
     Qt3DCore::QEntity           *_parent;
     QString                     _fileName;
 };

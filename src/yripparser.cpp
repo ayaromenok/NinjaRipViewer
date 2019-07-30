@@ -41,6 +41,7 @@ YRipParser::parseFile(const QString &fileName)
                     chunk = file.read(4);
                     if (chunk.contains(ripMagickNumber)){
                         qInfo() << "Found Ninja RIP file with" << file.size() << "bytes";
+                        parseRipFileBody(file);
                         result = true;
                     } else {
                         qWarning() << "file" << fileName << "is not a Ninja RIP";
@@ -65,4 +66,24 @@ YRipParser::fileInfo()
             << "v:"     << 0
             << "n:"     << 0
             << "tc:"    << 0;
+}
+
+bool
+YRipParser::parseRipFileBody(QFile &file)
+{
+    bool result = false;
+    QByteArray baFaceCount = file.read(4);
+    std::reverse(baFaceCount.begin(), baFaceCount.end());
+    QByteArray baVertexCount = file.read(4);
+    std::reverse(baVertexCount.begin(), baVertexCount.end());
+    QByteArray baVertexSize = file.read(4);
+    QByteArray baNumOfTex = file.read(4);
+    QByteArray baNumShaders = file.read(4);
+    QByteArray baNumOfVA = file.read(4);
+    bool ok;
+    qInfo() << "baFC" << baFaceCount << baFaceCount.toUInt(&ok,16) << (int)baFaceCount.at(3) ;
+    qInfo() << "ok?" << ok;
+    qInfo() << "baVC" << baVertexCount << baVertexCount.toLong(&ok);
+    qInfo() << "ok?" << ok;
+    return result;
 }
