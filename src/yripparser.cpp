@@ -7,5 +7,11 @@
 
 YRipParser::YRipParser(Qt3DCore::QEntity *parent)
 {
+    if (parent){
+        _parent = parent;
+    } else {
+        qErrnoWarning(-10, "requred Parent QEntity node");
+        exit(-10);
+    }
 
 }

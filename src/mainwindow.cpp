@@ -62,7 +62,7 @@ MainWindow::createCentralWidget()
    _testScene = new YTestScene(root);
 
     _viewP = new View(this);
-    _viewP->setRootEntity(root);
+   // _viewP->setRootEntity(root);
     _viewP->setCamPersp();
 
     //loutCentral->addWidget(new QGroupBox(tr("Front"), this), 0, 0);

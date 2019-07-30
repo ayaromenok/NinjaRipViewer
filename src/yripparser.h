@@ -7,8 +7,10 @@
 class YRipParser : public Qt3DCore::QEntity
 {
 public:
-    YRipParser(Qt3DCore::QEntity *parent = nullptr);
+    YRipParser(Qt3DCore::QEntity *parent);
 
+private:
+    Qt3DCore::QEntity           *_parent;
 };
 
 #endif // YRIPPARSER_H
