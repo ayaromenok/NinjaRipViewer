@@ -72,18 +72,33 @@ bool
 YRipParser::parseRipFileBody(QFile &file)
 {
     bool result = false;
-    QByteArray baFaceCount = file.read(4);
-    std::reverse(baFaceCount.begin(), baFaceCount.end());
-    QByteArray baVertexCount = file.read(4);
-    std::reverse(baVertexCount.begin(), baVertexCount.end());
-    QByteArray baVertexSize = file.read(4);
-    QByteArray baNumOfTex = file.read(4);
-    QByteArray baNumShaders = file.read(4);
-    QByteArray baNumOfVA = file.read(4);
-    bool ok;
-    qInfo() << "baFC" << baFaceCount << baFaceCount.toUInt(&ok,16) << (int)baFaceCount.at(3) ;
-    qInfo() << "ok?" << ok;
-    qInfo() << "baVC" << baVertexCount << baVertexCount.toLong(&ok);
-    qInfo() << "ok?" << ok;
+    quint32 fcVtx = byte4LEtoUInt32(file.read(4));
+    quint32 vtxNum =  byte4LEtoUInt32(file.read(4));
+    quint32 vtxSize =  byte4LEtoUInt32(file.read(4));
+    quint32 texNum =  byte4LEtoUInt32(file.read(4));
+    quint32 shaderNum =  byte4LEtoUInt32(file.read(4));
+    quint32 vaNum =  byte4LEtoUInt32(file.read(4));
+
+    qInfo() << "fcVtx:" << fcVtx << ", vtxNum:" << vtxNum << ", vtxSize:" << vtxSize
+            << ", texNum:" << texNum << ", shaderNum:" << shaderNum << ", vaNum:" << vaNum;
+    if ((vtxNum > 0) &  (vtxNum > 0)) {
+        result = true;
+    }
+    return result;
+}
+
+quint32
+YRipParser::byte4LEtoUInt32(QByteArray byte4)
+{
+    quint32 result = 0;
+    if (byte4.length() == 4){
+        result =  (((quint32)byte4.at(3) << 24) & 0xFF000000)
+                + (((quint32)byte4.at(2) << 16) &0x00FF0000)
+                + (((quint32)byte4.at(1) << 8) & 0x0000FF00)
+                + ((quint32)byte4.at(0) & 0x000000FF);
+    }
+    else {
+        qWarning() << "Input byte sequence is not equal to4 bytes";
+    }
     return result;
 }
