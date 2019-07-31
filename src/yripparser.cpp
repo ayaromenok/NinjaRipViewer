@@ -79,6 +79,7 @@ YRipParser::parseRipFileMagicNum(QFile &file)
     }
     return result;
 }
+
 bool
 YRipParser::parseRipFileHeader(QFile &file)
 {
@@ -109,7 +110,7 @@ YRipParser::parseRipFileVAttribHeader(QFile &file)
     QByteArray baN("NORMAL");
     baN.insert(0,baZero);
     baN.append(baZero);
-    //QByteArray baTC("TEXCOORD"); //may be necessary to bake texture to color
+    QByteArray baTC("TEXCOORD"); //may be necessary to bake texture to color
     //QByteArray baTNG("TANGENT"); //not necessary for now
     //QByteArray baBN("BINORMAL"); //not necessary for now
 
@@ -134,6 +135,19 @@ YRipParser::parseRipFileVAttribHeader(QFile &file)
         quint32 _nSize =  byte4LEtoUInt32(file.read(4));
         quint32 _nNumOfElem =  byte4LEtoUInt32(file.read(4));
         qInfo() << baN << _nIndex << _nOffset << _nSize << _nNumOfElem;
+        result = true;
+    }
+
+    //need clarification from spec
+    chunk = file.read(12);
+
+    chunk = file.read(8);
+    if (chunk.contains(baTC)){
+        quint32 _tcIndex = byte4LEtoUInt32(file.read(4));
+        quint32 _tcOffset = byte4LEtoUInt32(file.read(4));
+        quint32 _tcSize =  byte4LEtoUInt32(file.read(4));
+        quint32 _tcNumOfElem =  byte4LEtoUInt32(file.read(4));
+        qInfo() << baTC << _tcIndex << _tcOffset << _tcSize << _tcNumOfElem;
         result = true;
     }
     //qInfo() << baV << baN << baTC;
