@@ -31,17 +31,9 @@ YRipParser::parseFile(const QString &fileName)
         if (fi.exists()){
             QFile file(_fileName);
             if (file.open(QIODevice::ReadOnly)){
-                    QByteArray ripMagickNumber;
-                    ripMagickNumber.resize(4);
-                    ripMagickNumber[0] = 0xDE;
-                    ripMagickNumber[1] = 0xC0;
-                    ripMagickNumber[2] = 0xAD;
-                    ripMagickNumber[3] = 0xDE;
-                    QByteArray chunk;
-                    chunk = file.read(4);
-                    if (chunk.contains(ripMagickNumber)){
+                    if (parseRipFileMagicNum(file)){
                         qInfo() << "Found Ninja RIP file with" << file.size() << "bytes";
-                        parseRipFileBody(file);
+                        parseRipFileHeader(file);
                         result = true;
                     } else {
                         qWarning() << "file" << fileName << "is not a Ninja RIP";
@@ -69,7 +61,25 @@ YRipParser::fileInfo()
 }
 
 bool
-YRipParser::parseRipFileBody(QFile &file)
+YRipParser::parseRipFileMagicNum(QFile &file)
+{
+    bool result = false;
+
+    QByteArray ripMagickNumber;
+    ripMagickNumber.resize(4);
+    ripMagickNumber[0] = 0xDE;
+    ripMagickNumber[1] = 0xC0;
+    ripMagickNumber[2] = 0xAD;
+    ripMagickNumber[3] = 0xDE;
+    QByteArray chunk;
+    chunk = file.read(4);
+    if (chunk.contains(ripMagickNumber)){
+        result = true;
+    }
+    return result;
+}
+bool
+YRipParser::parseRipFileHeader(QFile &file)
 {
     bool result = false;
 
