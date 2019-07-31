@@ -39,10 +39,9 @@ void
 View::setRootEntity(Qt3DCore::QEntity *root){
     if(root) {
         root->setParent(_root);
-        qDebug() << "OK";
      }
     else {
-        qDebug() << "wrong";
+        qDebug() << "wrong setting View::RootEntity";
     }
 
 }

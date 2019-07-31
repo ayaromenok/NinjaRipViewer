@@ -34,6 +34,7 @@ YRipParser::parseFile(const QString &fileName)
                     if (parseRipFileMagicNum(file)){
                         qInfo() << "Found Ninja RIP file with" << file.size() << "bytes";
                         parseRipFileHeader(file);
+                        parseRipFileVAttribHeader(file);
                         result = true;
                     } else {
                         qWarning() << "file" << fileName << "is not a Ninja RIP";
@@ -53,7 +54,7 @@ YRipParser::parseFile(const QString &fileName)
 void
 YRipParser::fileInfo()
 {
-    qInfo() << "Ninja RIP file:" << _fileName
+    qInfo() << ">> Ninja RIP file info:" << _fileName
             << "\nf:"   << _fcNum
             << "v:"     << _vtxNum
             << "vAttr:" << _vAttrNum
@@ -94,6 +95,48 @@ YRipParser::parseRipFileHeader(QFile &file)
     if ((_fcNum > 0) &  (_vtxNum > 0)) {
         result = true;
     }
+    return result;
+}
+
+bool
+YRipParser::parseRipFileVAttribHeader(QFile &file)
+{
+    bool result = false;
+    QByteArray baZero;
+    baZero.resize(1);
+    baZero[0] = 0x00;
+    QByteArray baV("POSITION"); //V for Vertex
+    QByteArray baN("NORMAL");
+    baN.insert(0,baZero);
+    baN.append(baZero);
+    //QByteArray baTC("TEXCOORD"); //may be necessary to bake texture to color
+    //QByteArray baTNG("TANGENT"); //not necessary for now
+    //QByteArray baBN("BINORMAL"); //not necessary for now
+
+    QByteArray chunk;
+    chunk = file.read(8);
+    if (chunk.contains(baV)){
+        quint32 _vIndex = byte4LEtoUInt32(file.read(4));
+        quint32 _vOffset = byte4LEtoUInt32(file.read(4));
+        quint32 _vSize =  byte4LEtoUInt32(file.read(4));
+        quint32 _vNumOfElem =  byte4LEtoUInt32(file.read(4));
+        qInfo() << baV << _vIndex << _vOffset << _vSize << _vNumOfElem;
+        result = true;
+    }
+
+    //need clarification from spec
+    chunk = file.read(12);
+
+    chunk = file.read(8);
+    if (chunk.contains(baN)){
+        quint32 _nIndex = byte4LEtoUInt32(file.read(4));
+        quint32 _nOffset = byte4LEtoUInt32(file.read(4));
+        quint32 _nSize =  byte4LEtoUInt32(file.read(4));
+        quint32 _nNumOfElem =  byte4LEtoUInt32(file.read(4));
+        qInfo() << baN << _nIndex << _nOffset << _nSize << _nNumOfElem;
+        result = true;
+    }
+    //qInfo() << baV << baN << baTC;
     return result;
 }
 
