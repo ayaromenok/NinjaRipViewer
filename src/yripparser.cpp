@@ -62,26 +62,26 @@ void
 YRipParser::fileInfo()
 {
     qInfo() << "Ninja RIP file:" << _fileName
-            << "\nf:"   << 0
-            << "v:"     << 0
-            << "n:"     << 0
-            << "tc:"    << 0;
+            << "\nf:"   << _fcNum
+            << "v:"     << _vtxNum
+            << "vAttr:" << _vAttrNum
+            << "tex:"   << _texNum;
 }
 
 bool
 YRipParser::parseRipFileBody(QFile &file)
 {
     bool result = false;
-    quint32 fcVtx = byte4LEtoUInt32(file.read(4));
-    quint32 vtxNum =  byte4LEtoUInt32(file.read(4));
-    quint32 vtxSize =  byte4LEtoUInt32(file.read(4));
-    quint32 texNum =  byte4LEtoUInt32(file.read(4));
-    quint32 shaderNum =  byte4LEtoUInt32(file.read(4));
-    quint32 vaNum =  byte4LEtoUInt32(file.read(4));
 
-    qInfo() << "fcVtx:" << fcVtx << ", vtxNum:" << vtxNum << ", vtxSize:" << vtxSize
-            << ", texNum:" << texNum << ", shaderNum:" << shaderNum << ", vaNum:" << vaNum;
-    if ((vtxNum > 0) &  (vtxNum > 0)) {
+    _fVersion = byte4LEtoUInt32(file.read(4));
+    _fcNum = byte4LEtoUInt32(file.read(4));
+    _vtxNum =  byte4LEtoUInt32(file.read(4));
+    _vtxSize =  byte4LEtoUInt32(file.read(4));
+    _texNum =  byte4LEtoUInt32(file.read(4));
+    _shaderNum =  byte4LEtoUInt32(file.read(4));
+    _vAttrNum =  byte4LEtoUInt32(file.read(4));
+
+    if ((_fcNum > 0) &  (_vtxNum > 0)) {
         result = true;
     }
     return result;

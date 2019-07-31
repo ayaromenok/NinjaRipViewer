@@ -15,8 +15,17 @@ public:
 
 private:
     bool parseRipFileBody(QFile &file);
+    quint32 byte4LEtoUInt32(QByteArray byte4);
     Qt3DCore::QEntity           *_parent;
     QString                     _fileName;
+
+    quint32                     _fVersion;
+    quint32                     _fcNum;
+    quint32                     _vtxNum;
+    quint32                     _vtxSize;
+    quint32                     _texNum;
+    quint32                     _shaderNum;
+    quint32                     _vaNum;
 };
 
 #endif // YRIPPARSER_H
