@@ -103,60 +103,24 @@ bool
 YRipParser::parseRipFileVAttribHeader(QFile &file)
 {
     bool result = false;
-    QByteArray baZero;
-    baZero.resize(1);
-    baZero[0] = 0x00;
-    QByteArray baV("POSITION"); //V for Vertex
-    QByteArray baN("NORMAL");
-    baN.insert(0,baZero);
-    baN.append(baZero);
-    QByteArray baTC("TEXCOORD"); //may be necessary to bake texture to color
-    //QByteArray baTNG("TANGENT"); //not necessary for now
-    //QByteArray baBN("BINORMAL"); //not necessary for now
-
+    // "POSITION", "NORMAL", "TEXCOORD","TANGENT", "BINORMAL"
     QString string;
-    if (readStringNullTerm(file, string)) {
-        qInfo() << string;
-    }
-            /*
-    QByteArray chunk;
-    chunk = file.read(8);
-    if (chunk.contains(baV)){
-        quint32 _vIndex = byte4LEtoUInt32(file.read(4));
-        quint32 _vOffset = byte4LEtoUInt32(file.read(4));
-        quint32 _vSize =  byte4LEtoUInt32(file.read(4));
-        quint32 _vNumOfElem =  byte4LEtoUInt32(file.read(4));
-        qInfo() << baV << _vIndex << _vOffset << _vSize << _vNumOfElem;
-        result = true;
-    }
-
-    //need clarification from spec
-    chunk = file.read(12);
-
-    chunk = file.read(8);
-    if (chunk.contains(baN)){
-        quint32 _nIndex = byte4LEtoUInt32(file.read(4));
-        quint32 _nOffset = byte4LEtoUInt32(file.read(4));
-        quint32 _nSize =  byte4LEtoUInt32(file.read(4));
-        quint32 _nNumOfElem =  byte4LEtoUInt32(file.read(4));
-        qInfo() << baN << _nIndex << _nOffset << _nSize << _nNumOfElem;
-        result = true;
+    quint32 index, offset, size, numOfElem;
+    for (quint32 i=0; i<_vAttrNum; i++){
+        string.clear();
+        if (readStringNullTerm(file, string)) {
+            index = byte4LEtoUInt32(file.read(4));
+            offset = byte4LEtoUInt32(file.read(4));
+            size =  byte4LEtoUInt32(file.read(4));
+            numOfElem =  byte4LEtoUInt32(file.read(4));
+            qInfo() << string << index << offset << size << numOfElem;
+            for (quint32 j=0; j<numOfElem; j++){
+                quint32 elem = byte4LEtoUInt32(file.read(4));
+                qInfo() << elem;
+            }
+        }
     }
 
-    //need clarification from spec
-    chunk = file.read(12);
-
-    chunk = file.read(8);
-    if (chunk.contains(baTC)){
-        quint32 _tcIndex = byte4LEtoUInt32(file.read(4));
-        quint32 _tcOffset = byte4LEtoUInt32(file.read(4));
-        quint32 _tcSize =  byte4LEtoUInt32(file.read(4));
-        quint32 _tcNumOfElem =  byte4LEtoUInt32(file.read(4));
-        qInfo() << baTC << _tcIndex << _tcOffset << _tcSize << _tcNumOfElem;
-        result = true;
-    }
-    //qInfo() << baV << baN << baTC;
-            */
     return result;
 }
 
@@ -199,7 +163,6 @@ YRipParser::readStringNullTerm(QFile &file, QString &string)
     while (file.getChar(&ch)){
         if (ch != 0x00) {
             string.append(ch);
-            qInfo() << ch;
         } else {
             return true;
         }
