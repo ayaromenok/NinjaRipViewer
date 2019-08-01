@@ -114,6 +114,11 @@ YRipParser::parseRipFileVAttribHeader(QFile &file)
     //QByteArray baTNG("TANGENT"); //not necessary for now
     //QByteArray baBN("BINORMAL"); //not necessary for now
 
+    QString string;
+    if (readStringNullTerm(file, string)) {
+        qInfo() << string;
+    }
+            /*
     QByteArray chunk;
     chunk = file.read(8);
     if (chunk.contains(baV)){
@@ -151,6 +156,7 @@ YRipParser::parseRipFileVAttribHeader(QFile &file)
         result = true;
     }
     //qInfo() << baV << baN << baTC;
+            */
     return result;
 }
 
@@ -168,4 +174,19 @@ YRipParser::byte4LEtoUInt32(QByteArray byte4)
         qWarning() << "Input byte sequence is not equal to4 bytes";
     }
     return result;
+}
+
+bool
+YRipParser::readStringNullTerm(QFile &file, QString &string)
+{
+    char ch;
+    while (file.getChar(&ch)){
+        if (ch != 0x00) {
+            string.append(ch);
+            qInfo() << ch;
+        } else {
+            return true;
+        }
+    }
+    return false;
 }

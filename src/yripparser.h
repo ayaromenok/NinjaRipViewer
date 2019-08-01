@@ -18,6 +18,7 @@ private:
     bool parseRipFileHeader(QFile &file);
     bool parseRipFileVAttribHeader(QFile &file);
     quint32 byte4LEtoUInt32(QByteArray byte4);
+    bool readStringNullTerm(QFile &file, QString &string);
     Qt3DCore::QEntity           *_parent;
     QString                     _fileName;
 
