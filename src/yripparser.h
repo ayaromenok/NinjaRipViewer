@@ -30,6 +30,23 @@ private:
     quint32                     _texNum;
     quint32                     _shaderNum;
     quint32                     _vAttrNum;
+
+    quint32                     _vX;
+    quint32                     _vY;
+    quint32                     _vZ;
+    quint32                     _vTemp;
+
+    quint32                     _nX;
+    quint32                     _nY;
+    quint32                     _nZ;
+    quint32                     _nTemp;
+
+    quint32                     _tcU;
+    quint32                     _tcV;
+    quint32                     _tcTemp;
+
+    QStringList                 *_textures;
+    QStringList                 *_shaders;
 };
 
 #endif // YRIPPARSER_H

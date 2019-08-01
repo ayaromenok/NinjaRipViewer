@@ -13,12 +13,21 @@ YRipParser::YRipParser(Qt3DCore::QEntity *parent)
         qErrnoWarning(-10, "requred Parent QEntity node");
         exit(-10);
     }
+    _textures = new QStringList();
+    _shaders = new QStringList();
 
 }
 
 YRipParser::~YRipParser()
 {
-
+    _textures->clear();
+    if(_textures->isEmpty()){
+        delete _textures;
+    }
+    _shaders->clear();
+    if(_shaders->isEmpty()){
+        delete _shaders;
+    }
 }
 
 bool
@@ -105,6 +114,9 @@ YRipParser::parseRipFileVAttribHeader(QFile &file)
     bool result = false;
     // "POSITION", "NORMAL", "TEXCOORD","TANGENT", "BINORMAL"
     QString string;
+    _vTemp = 0;
+    _nTemp = 0;
+    _tcTemp = 0;
     quint32 index, offset, size, numOfElem;
     for (quint32 i=0; i<_vAttrNum; i++){
         string.clear();
@@ -118,7 +130,56 @@ YRipParser::parseRipFileVAttribHeader(QFile &file)
                 quint32 elem = byte4LEtoUInt32(file.read(4));
                 qInfo() << elem;
             }
+
+            if (string.contains("POSITION")){
+                if (0 == _vTemp){
+                    _vX = offset/4;
+                    _vY = _vX + 1;
+                    _vZ = _vX + 2;
+                    _vTemp++;
+                    if (1 == _vY){ //any mesh should contain _vX=0, _vY=1, _vZ=2
+                        result = true;
+                    }
+                }
+            }
+            if (string.contains("NORMAL")){
+                if (0 == _nTemp){
+                    _nX = offset/4;
+                    _nY = _nX + 1;
+                    _nZ = _nX + 2;
+                    _nTemp++;
+                }
+            }
+            if (string.contains("TEXCOORD")){
+                if (0 == _tcTemp){
+                    _tcU = offset/4;
+                    _tcV = _tcU + 1;
+                    _tcTemp++;
+                }
+            }
         }
+    }
+    qInfo() << "v" << _vX << _vY << _vZ << "n" << _nX << _nY << _nZ
+            << "tc" << _tcU << _tcV;
+
+    //textures
+    if (_texNum >0) {
+        for (quint32 i=0; i<_texNum; i++){
+            QString string;
+            readStringNullTerm(file, string);
+            _textures->append(string);
+        }
+        qInfo() << "textures:" << _textures->toStdList();
+    }
+
+    //shaders
+    if (_shaderNum >0) {
+        for (quint32 i=0; i<_shaderNum; i++){
+            QString string;
+            readStringNullTerm(file, string);
+            _shaders->append(string);
+        }
+        qInfo() << "shaders: " << _shaders->toStdList();
     }
 
     return result;
