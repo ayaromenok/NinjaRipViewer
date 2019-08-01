@@ -45,6 +45,7 @@ YRipParser::parseFile(const QString &fileName)
                         parseRipFileHeader(file);
                         parseRipFileVAttribHeader(file);
                         parseRipFileIndexData(file);
+                        parseRipFileVertexData(file);
                         result = true;
                     } else {
                         qWarning() << "file" << fileName << "is not a Ninja RIP";
@@ -200,7 +201,26 @@ YRipParser::parseRipFileIndexData(QFile &file)
     return result;
 }
 
+bool
+YRipParser::parseRipFileVertexData(QFile &file)
+{
+    bool result = false;
+    for (quint32 i=0; i<_vtxNum; i++){
+        float vx = byte4LEtoFloat32(file.read(4));
+        float vy = byte4LEtoFloat32(file.read(4));
+        float vz = byte4LEtoFloat32(file.read(4));
+        float nx = byte4LEtoFloat32(file.read(4));
+        float ny = byte4LEtoFloat32(file.read(4));
+        float nz = byte4LEtoFloat32(file.read(4));
+        float tcU = byte4LEtoFloat32(file.read(4));
+        float tcV = byte4LEtoFloat32(file.read(4));
 
+        qInfo() << "v:" << i << "pos:" << vx << vy << vz <<
+                   "n:" << nx << ny << nz << "tc0:" << tcU << tcV;
+    }
+    result = true;
+    return result;
+}
 
 quint32
 YRipParser::byte4LEtoUInt32(QByteArray byte4)
@@ -219,7 +239,7 @@ YRipParser::byte4LEtoUInt32(QByteArray byte4)
 }
 
 float
-YRipParser::byte4LEtoUFloat32(QByteArray byte4)
+YRipParser::byte4LEtoFloat32(QByteArray byte4)
 {
     float result = 0.0f;
     if (byte4.length() == 4){
