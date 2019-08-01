@@ -44,6 +44,7 @@ YRipParser::parseFile(const QString &fileName)
                         qInfo() << "Found Ninja RIP file with" << file.size() << "bytes";
                         parseRipFileHeader(file);
                         parseRipFileVAttribHeader(file);
+                        parseRipFileIndexData(file);
                         result = true;
                     } else {
                         qWarning() << "file" << fileName << "is not a Ninja RIP";
@@ -184,6 +185,22 @@ YRipParser::parseRipFileVAttribHeader(QFile &file)
 
     return result;
 }
+
+bool
+YRipParser::parseRipFileIndexData(QFile &file)
+{
+    bool result = false;
+    for (quint32 i=0; i<_fcNum; i++){
+        quint32 i0 = byte4LEtoUInt32(file.read(4));
+        quint32 i1 = byte4LEtoUInt32(file.read(4));
+        quint32 i2 = byte4LEtoUInt32(file.read(4));
+        qInfo() << "face:" << i << "[" << i0 << i1 << i2 << "]";
+    }
+    result = true;
+    return result;
+}
+
+
 
 quint32
 YRipParser::byte4LEtoUInt32(QByteArray byte4)

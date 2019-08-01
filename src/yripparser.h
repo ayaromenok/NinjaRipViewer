@@ -17,9 +17,12 @@ private:
     bool parseRipFileMagicNum(QFile &file);
     bool parseRipFileHeader(QFile &file);
     bool parseRipFileVAttribHeader(QFile &file);
+    bool parseRipFileIndexData(QFile &file);
+   // bool parseRipFileVertexData(QFile &file);
     quint32 byte4LEtoUInt32(QByteArray byte4);
     float byte4LEtoUFloat32(QByteArray byte4);
     bool readStringNullTerm(QFile &file, QString &string);
+
     Qt3DCore::QEntity           *_parent;
     QString                     _fileName;
 
