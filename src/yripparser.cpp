@@ -176,6 +176,22 @@ YRipParser::byte4LEtoUInt32(QByteArray byte4)
     return result;
 }
 
+float
+YRipParser::byte4LEtoUFloat32(QByteArray byte4)
+{
+    float result = 0.0f;
+    if (byte4.length() == 4){
+        result =  (((quint32)byte4.at(3) << 24) & 0xFF000000)
+                + (((quint32)byte4.at(2) << 16) &0x00FF0000)
+                + (((quint32)byte4.at(1) << 8) & 0x0000FF00)
+                + ((quint32)byte4.at(0) & 0x000000FF);
+    }
+    else {
+        qWarning() << "Input byte sequence is not equal to4 bytes";
+    }
+    return result;
+}
+
 bool
 YRipParser::readStringNullTerm(QFile &file, QString &string)
 {
