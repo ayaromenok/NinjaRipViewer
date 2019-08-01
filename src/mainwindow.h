@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 class QSettings;
+class YRipParser;
 class YTestScene;
 class View;
 
@@ -13,6 +14,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+public slots:
+    void openFile();
+
 private:
 
     void createDockWidgets();
@@ -20,8 +24,11 @@ private:
     void createActions();
 
     QSettings   *_settings;
+    YRipParser  *_parser;
     YTestScene  *_testScene;
-    View*       _viewP;
+    View        *_viewP;
+    QString     _fName;
+
 };
 
 #endif // MAINWINDOW_H

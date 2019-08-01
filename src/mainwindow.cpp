@@ -4,7 +4,9 @@
 #include <Qt3DCore>
 
 #include "view.h"
+#include "yripparser.h"
 #include "ytestscene.h"
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -19,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     _settings = new QSettings(this);
     restoreGeometry(_settings->value("geometry").toByteArray());
     restoreState(_settings->value("windowState").toByteArray());
+
     //restoreState();
 }
 
@@ -55,11 +58,8 @@ MainWindow::createCentralWidget()
     QWidget     *wdCentral = new QWidget(this);
     QGridLayout *loutCentral = new QGridLayout(wdCentral);
 
-    Qt3DCore::QEntity *root = new Qt3DCore::QEntity();
-   _testScene = new YTestScene(root);
 
     _viewP = new View(this);
-    _viewP->setRootEntity(root);
     _viewP->setCamPersp();
 
     //loutCentral->addWidget(new QGroupBox(tr("Front"), this), 0, 0);
@@ -70,6 +70,22 @@ MainWindow::createCentralWidget()
 }
 
 void
+MainWindow::openFile()
+{
+    QStringList fNames = QFileDialog::getOpenFileNames(this, tr("Open Ninja RIP file"),
+                                         "~", tr("Ninja RIP (*.rip);;Wavefront OBJ (*.obj);;All Files (*.*)"));
+    qInfo() << "open files:" << fNames.length() << "\n" << fNames;
+    Qt3DCore::QEntity *root = new Qt3DCore::QEntity();
+    _parser = new YRipParser(root);
+    if (_parser->parseFile(fNames.at(0))) {
+        _parser->fileInfo();
+    } else {
+        _testScene = new YTestScene(root);
+    }
+    _viewP->setRootEntity(root);
+}
+
+void
 MainWindow::createActions()
 {
     auto fileMenu = menuBar()->addMenu(tr("&File"));
@@ -77,14 +93,22 @@ MainWindow::createActions()
     auto fileToolBar = addToolBar(tr("&File"));
     fileToolBar->setObjectName("FileToolBar");
 
+
+    QAction *actOpen = new QAction("&Open", this);
+    connect(actOpen, &QAction::triggered, this, &MainWindow::openFile );
+    fileMenu->addAction(actOpen);
+    fileToolBar->addAction(actOpen);
+    fileMenu->addSeparator();
+
+
     QAction *actExit = new QAction("E&xit", this);
     connect(actExit, &QAction::triggered, qApp, &QApplication::quit );
     fileMenu->addAction(actExit);
     fileToolBar->addAction(actExit);
+    fileMenu->addSeparator();
 
     QAction *actCapture = new QAction("Capture", this);
-    connect(actCapture, &QAction::triggered, _viewP, &View::captureToFile);
-    fileMenu->addSeparator();
+    connect(actCapture, &QAction::triggered, _viewP, &View::captureToFile);    
     fileMenu->addAction(actCapture);
     fileToolBar->addSeparator();
     fileToolBar->addAction(actCapture);
