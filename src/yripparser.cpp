@@ -241,9 +241,12 @@ YRipParser::byte4LEtoUInt32(QByteArray byte4)
 float
 YRipParser::byte4LEtoFloat32(QByteArray byte4)
 {
-    float result = 0.0f;
+    union {
+        float f;
+        quint32 i;
+    } result;
     if (byte4.length() == 4){
-        result =  (((quint32)byte4.at(3) << 24) & 0xFF000000)
+        result.i =  (((quint32)byte4.at(3) << 24) & 0xFF000000)
                 + (((quint32)byte4.at(2) << 16) &0x00FF0000)
                 + (((quint32)byte4.at(1) << 8) & 0x0000FF00)
                 + ((quint32)byte4.at(0) & 0x000000FF);
@@ -251,7 +254,7 @@ YRipParser::byte4LEtoFloat32(QByteArray byte4)
     else {
         qWarning() << "Input byte sequence is not equal to4 bytes";
     }
-    return result;
+    return result.f;
 }
 
 bool
