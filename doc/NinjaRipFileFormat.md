@@ -11,10 +11,10 @@
 4 : # of VertexAttrib(va)
 
 #### 
-8 : str, like "POSITION" or "NORMAL"/"TEXCOORD"/"TANGENT"/"BINORMAL"/
+null-term string : like "POSITION" or "NORMAL"/"TEXCOORD"/"TANGENT"/"BINORMAL"/
 4 : index
 4 : offset
 4 : size 
 4 : # of elements in va
 for (i=0; i< #_elems_va; do)
-	4 : type of element; 0000 - float32
+	4 : type of element; if (0000): float32
