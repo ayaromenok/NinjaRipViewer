@@ -10,11 +10,13 @@ SOURCES += \
         src/main.cpp \
         src/mainwindow.cpp \
         src/view.cpp\
+        src/ycustommesh.cpp \
         src/yripparser.cpp \
         src/ytestscene.cpp
 HEADERS += \
         src/mainwindow.h \
         src/view.h \
+        src/ycustommesh.h \
         src/yripparser.h \
         src/ytestscene.h
 # Default rules for deployment.
