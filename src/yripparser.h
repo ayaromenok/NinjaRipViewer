@@ -19,9 +19,12 @@ private:
     bool parseRipFileVAttribHeader(QFile &file);
     bool parseRipFileIndexData(QFile &file);
     bool parseRipFileVertexData(QFile &file);
-    quint32 byte4LEtoUInt32(QByteArray byte4);
-    float byte4LEtoFloat32(QByteArray byte4);
-    bool readStringNullTerm(QFile &file, QString &string);
+
+    bool createEntity();
+    //utils
+    quint32     byte4LEtoUInt32(QByteArray byte4);
+    float       byte4LEtoFloat32(QByteArray byte4);
+    bool        readStringNullTerm(QFile &file, QString &string);
 
     Qt3DCore::QEntity           *_parent;
     QString                     _fileName;
