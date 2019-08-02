@@ -25,81 +25,86 @@ bool
 YCustomMesh::createEntity()
 {
     bool result = false;
-    Qt3DRender::QMaterial
-            *material = new Qt3DExtras::QPerVertexColorMaterial(_parent);
-    Qt3DCore::QEntity
-            *meshEntity = new Qt3DCore::QEntity(_parent);
-    Qt3DCore::QTransform
-            *transform = new Qt3DCore::QTransform;
-    Qt3DRender::QGeometryRenderer
-            *meshRenderer = new Qt3DRender::QGeometryRenderer;
-    Qt3DRender::QGeometry
-            *geom = new Qt3DRender::QGeometry(meshEntity);
 
-    _vBuf = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, geom);
-    _iBuf = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::IndexBuffer, geom);
+    _mtl = new Qt3DExtras::QPerVertexColorMaterial(_parent);
+    _meshEntity = new Qt3DCore::QEntity(_parent);
+    _transform = new Qt3DCore::QTransform;
+    _meshRenderer = new Qt3DRender::QGeometryRenderer;
+    _geom = new Qt3DRender::QGeometry(_meshEntity);
+
+    _vBuf = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, _geom);
+    _iBuf = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::IndexBuffer, _geom);
 
     createTestMesh();
+    createAttribs();
 
-    // Attributes
-    Qt3DRender::QAttribute *positionAttribute = new Qt3DRender::QAttribute();
-    positionAttribute->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
-    positionAttribute->setBuffer(_vBuf);
-    positionAttribute->setVertexBaseType(Qt3DRender::QAttribute::Float);
-    positionAttribute->setVertexSize(3);
-    positionAttribute->setByteOffset(0);
-    positionAttribute->setByteStride(9 * sizeof(float));
-    positionAttribute->setCount(4);
-    positionAttribute->setName(Qt3DRender::QAttribute::defaultPositionAttributeName());
-
-    Qt3DRender::QAttribute *normalAttribute = new Qt3DRender::QAttribute();
-    normalAttribute->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
-    normalAttribute->setBuffer(_vBuf);
-    normalAttribute->setVertexBaseType(Qt3DRender::QAttribute::Float);
-    normalAttribute->setVertexSize(3);
-    normalAttribute->setByteOffset(3 * sizeof(float));
-    normalAttribute->setByteStride(9 * sizeof(float));
-    normalAttribute->setCount(4);
-    normalAttribute->setName(Qt3DRender::QAttribute::defaultNormalAttributeName());
-
-    Qt3DRender::QAttribute *colorAttribute = new Qt3DRender::QAttribute();
-    colorAttribute->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
-    colorAttribute->setBuffer(_vBuf);
-    colorAttribute->setVertexBaseType(Qt3DRender::QAttribute::Float);
-    colorAttribute->setVertexSize(3);
-    colorAttribute->setByteOffset(6 * sizeof(float));
-    colorAttribute->setByteStride(9 * sizeof(float));
-    colorAttribute->setCount(4);
-    colorAttribute->setName(Qt3DRender::QAttribute::defaultColorAttributeName());
-
-    Qt3DRender::QAttribute *indexAttribute = new Qt3DRender::QAttribute();
-    indexAttribute->setAttributeType(Qt3DRender::QAttribute::IndexAttribute);
-    indexAttribute->setBuffer(_iBuf);
-    indexAttribute->setVertexBaseType(Qt3DRender::QAttribute::UnsignedShort);
-    indexAttribute->setVertexSize(1);
-    indexAttribute->setByteOffset(0);
-    indexAttribute->setByteStride(0);
-    indexAttribute->setCount(12);
-
-    geom->addAttribute(positionAttribute);
-    geom->addAttribute(normalAttribute);
-    geom->addAttribute(colorAttribute);
-    geom->addAttribute(indexAttribute);
-
-    meshRenderer->setInstanceCount(1);
-    meshRenderer->setIndexOffset(0);
-    meshRenderer->setFirstInstance(0);
-    meshRenderer->setPrimitiveType(Qt3DRender::QGeometryRenderer::Triangles);
-    meshRenderer->setGeometry(geom);
+    _meshRenderer->setInstanceCount(1);
+    _meshRenderer->setIndexOffset(0);
+    _meshRenderer->setFirstInstance(0);
+    _meshRenderer->setPrimitiveType(Qt3DRender::QGeometryRenderer::Triangles);
+    _meshRenderer->setGeometry(_geom);
     // 4 faces of 3 points
-    meshRenderer->setVertexCount(12);
+    _meshRenderer->setVertexCount(12);
 
-    meshEntity->addComponent(meshRenderer);
-    meshEntity->addComponent(transform);
-    meshEntity->addComponent(material);
+    _meshEntity->addComponent(_meshRenderer);
+    _meshEntity->addComponent(_transform);
+    _meshEntity->addComponent(_mtl);
+
+    result = true;
+
     return  result;
 }
 
+bool
+YCustomMesh::createAttribs()
+{
+    bool result = false;
+    // Attributes
+    _attrPos = new Qt3DRender::QAttribute();
+    _attrPos->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
+    _attrPos->setBuffer(_vBuf);
+    _attrPos->setVertexBaseType(Qt3DRender::QAttribute::Float);
+    _attrPos->setVertexSize(3);
+    _attrPos->setByteOffset(0);
+    _attrPos->setByteStride(9 * sizeof(float));
+    _attrPos->setCount(4);
+    _attrPos->setName(Qt3DRender::QAttribute::defaultPositionAttributeName());
+
+    _attrNormal = new Qt3DRender::QAttribute();
+    _attrNormal->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
+    _attrNormal->setBuffer(_vBuf);
+    _attrNormal->setVertexBaseType(Qt3DRender::QAttribute::Float);
+    _attrNormal->setVertexSize(3);
+    _attrNormal->setByteOffset(3 * sizeof(float));
+    _attrNormal->setByteStride(9 * sizeof(float));
+    _attrNormal->setCount(4);
+    _attrNormal->setName(Qt3DRender::QAttribute::defaultNormalAttributeName());
+
+    _attrColor = new Qt3DRender::QAttribute();
+    _attrColor->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
+    _attrColor->setBuffer(_vBuf);
+    _attrColor->setVertexBaseType(Qt3DRender::QAttribute::Float);
+    _attrColor->setVertexSize(3);
+    _attrColor->setByteOffset(6 * sizeof(float));
+    _attrColor->setByteStride(9 * sizeof(float));
+    _attrColor->setCount(4);
+    _attrColor->setName(Qt3DRender::QAttribute::defaultColorAttributeName());
+
+    Qt3DRender::QAttribute *_attrIndex = new Qt3DRender::QAttribute();
+    _attrIndex->setAttributeType(Qt3DRender::QAttribute::IndexAttribute);
+    _attrIndex->setBuffer(_iBuf);
+    _attrIndex->setVertexBaseType(Qt3DRender::QAttribute::UnsignedShort);
+    _attrIndex->setVertexSize(1);
+    _attrIndex->setByteOffset(0);
+    _attrIndex->setByteStride(0);
+    _attrIndex->setCount(12);
+
+    _geom->addAttribute(_attrPos);
+    _geom->addAttribute(_attrNormal);
+    _geom->addAttribute(_attrColor);
+    _geom->addAttribute(_attrIndex);
+    return result;
+}
 bool
 YCustomMesh::createTestMesh()
 {
