@@ -231,6 +231,8 @@ YRipParser::createEntity()
     bool result = false;
 
 // add YCustomMesh here
+    _mesh = new YCustomMesh(_parent);
+    qInfo() << "mesh" << _mesh->childNodes();
 
     result = true;
     return result;

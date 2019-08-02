@@ -4,6 +4,10 @@
 #include <QObject>
 #include <Qt3DCore/QEntity>
 
+namespace Qt3DRender {
+    class QBuffer;
+}
+
 class YCustomMesh : public Qt3DCore::QEntity
 {
 public:
@@ -12,10 +16,11 @@ public:
 
 private:
     bool createEntity();
+    bool createTestMesh();
 
     Qt3DCore::QEntity       *_parent;
-    QByteArray              *_vData;
-    QByteArray              *_iData;
+    Qt3DRender::QBuffer     *_vBuf;
+    Qt3DRender::QBuffer     *_iBuf;
 };
 
 #endif // YCUSTOMMESH_H

@@ -5,6 +5,8 @@
 #include <QFile>
 #include <Qt3DCore/QEntity>
 
+class YCustomMesh;
+
 class YRipParser : public Qt3DCore::QEntity
 {
 public:
@@ -53,6 +55,8 @@ private:
 
     QStringList                 *_textures;
     QStringList                 *_shaders;
+
+    YCustomMesh                 *_mesh;
 };
 
 #endif // YRIPPARSER_H
