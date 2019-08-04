@@ -228,6 +228,10 @@ bool
 YRipParser::parseRipFileVertexData(QFile &file)
 {
     bool result = false;
+    _baVBuffData->resize(_vtxNum * (3+3+3) * sizeof(float));
+    _baVBuffData->fill(0x00);
+    float *rawVertexArray = reinterpret_cast<float*>(_baVBuffData->data());
+
     for (quint32 i=0; i<_vtxNum; i++){
         float vx = byte4LEtoFloat32(file.read(4));
         float vy = byte4LEtoFloat32(file.read(4));
@@ -240,6 +244,16 @@ YRipParser::parseRipFileVertexData(QFile &file)
 
         qInfo() << "v:" << i << "pos:" << vx << vy << vz <<
                    "n:" << nx << ny << nz << "tc0:" << tcU << tcV;
+
+        rawVertexArray[i*3] = vx;
+        rawVertexArray[i*3+1] = vy;
+        rawVertexArray[i*3+2] = vz;
+        rawVertexArray[i*3+3] = nx;
+        rawVertexArray[i*3+4] = ny;
+        rawVertexArray[i*3+5] = nz;
+        rawVertexArray[i*3+6] = tcU;
+        rawVertexArray[i*3+7] = tcV;
+        rawVertexArray[i*3+8] = 0.0f;
     }
     result = true;
     return result;

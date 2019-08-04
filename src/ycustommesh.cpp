@@ -184,7 +184,9 @@ YCustomMesh::setMeshData(const QByteArray &vBufData, const QByteArray &iBufData)
 {
     bool result = false;
     if ((vBufData.length() > 0) & (iBufData.length() > 0)){
-        qInfo() << "Correct CustomMesh input data";
+        qInfo() << "Correct CustomMesh input data" << vBufData.length()/(4*(3+3+3)) << iBufData.length()/(4*3);
+        _numOfVtx = vBufData.length()/(4*(3+3+3));
+        _numOfFaces = iBufData.length()/(4*3);
         _vBuf->setData(vBufData);
         _iBuf->setData(iBufData);
     } else {
