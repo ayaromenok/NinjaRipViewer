@@ -184,10 +184,11 @@ YCustomMesh::setMeshData(const QByteArray &vBufData, const QByteArray &iBufData)
 {
     bool result = false;
     if ((vBufData.length() > 0) & (iBufData.length() > 0)){
+        qInfo() << "Correct CustomMesh input data";
         _vBuf->setData(vBufData);
         _iBuf->setData(iBufData);
     } else {
-        qWarning() << "wrong CustomMesh input data, using default";
+        qWarning() << "WRONG CustomMesh input data, using default";
         createTestMesh();
     }
     createEntity();

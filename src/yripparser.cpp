@@ -10,8 +10,7 @@
 YRipParser::YRipParser(Qt3DCore::QEntity *parent)
 {
     if (parent){
-        _parent = parent;
-        createEntity();
+        _parent = parent;       
     } else {
         qErrnoWarning(-10, "requred Parent QEntity node");
         exit(-10);
@@ -62,6 +61,7 @@ YRipParser::parseFile(const QString &fileName)
         _fileName = ":/res/stub/cube.rip";
     }
 
+    createEntity();
     return result;
 }
 
