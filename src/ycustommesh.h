@@ -21,6 +21,8 @@ public:
     YCustomMesh(Qt3DCore::QEntity *parent);
     ~YCustomMesh();
 
+    bool setMeshData(const QByteArray &vBufData, const QByteArray &iBufData);
+
 private:
     bool createEntity();
     bool createTestMesh();

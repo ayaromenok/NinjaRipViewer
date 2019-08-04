@@ -231,7 +231,10 @@ YRipParser::createEntity()
     bool result = false;
 
 // add YCustomMesh here
+    QByteArray vBuffData;
+    QByteArray iBuffData;
     _mesh = new YCustomMesh(_parent);
+    _mesh->setMeshData(vBuffData, iBuffData);
     qInfo() << "mesh" << _mesh->childNodes();
 
     result = true;

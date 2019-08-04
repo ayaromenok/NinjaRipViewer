@@ -12,7 +12,16 @@ YCustomMesh::YCustomMesh(Qt3DCore::QEntity *parent)
     _numOfVtx       = 4;
     if (parent){
         _parent = parent;
-        createEntity();
+        _mtl = new Qt3DExtras::QPerVertexColorMaterial(_parent);
+        _meshEntity = new Qt3DCore::QEntity(_parent);
+        _transform = new Qt3DCore::QTransform;
+        _meshRenderer = new Qt3DRender::QGeometryRenderer;
+        _geom = new Qt3DRender::QGeometry(_meshEntity);
+
+        _vBuf = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, _geom);
+        _iBuf = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::IndexBuffer, _geom);
+
+        //createEntity();
     } else {
         qErrnoWarning(-10, "requred Parent QEntity node");
         exit(-10);
@@ -28,17 +37,6 @@ bool
 YCustomMesh::createEntity()
 {
     bool result = false;
-
-    _mtl = new Qt3DExtras::QPerVertexColorMaterial(_parent);
-    _meshEntity = new Qt3DCore::QEntity(_parent);
-    _transform = new Qt3DCore::QTransform;
-    _meshRenderer = new Qt3DRender::QGeometryRenderer;
-    _geom = new Qt3DRender::QGeometry(_meshEntity);
-
-    _vBuf = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, _geom);
-    _iBuf = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::IndexBuffer, _geom);
-
-    createTestMesh();
     createAttribs();
 
     _meshRenderer->setInstanceCount(1);
@@ -178,5 +176,20 @@ YCustomMesh::createTestMesh()
     _vBuf->setData(vertexBufferData);
     _iBuf->setData(indexBufferData);
 
+    return  result;
+}
+
+bool
+YCustomMesh::setMeshData(const QByteArray &vBufData, const QByteArray &iBufData)
+{
+    bool result = false;
+    if ((vBufData.length() > 0) & (iBufData.length() > 0)){
+        _vBuf->setData(vBufData);
+        _iBuf->setData(iBufData);
+    } else {
+        qWarning() << "wrong CustomMesh input data, using default";
+        createTestMesh();
+    }
+    createEntity();
     return  result;
 }
