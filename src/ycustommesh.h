@@ -40,6 +40,10 @@ private:
     Qt3DRender::QAttribute          *_attrNormal;
     Qt3DRender::QAttribute          *_attrColor;
     Qt3DRender::QAttribute          *_attrIndex;
+
+    quint32                         _numOfFaces;
+    quint32                         _numOfVtx;
+    quint32                         _numOfVtxInFace;
 };
 
 #endif // YCUSTOMMESH_H

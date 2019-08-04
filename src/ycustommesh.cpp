@@ -7,6 +7,9 @@
 
 YCustomMesh::YCustomMesh(Qt3DCore::QEntity *parent)
 {
+    _numOfVtxInFace = 3;        //usually 3
+    _numOfFaces     = 4;            //for default object it's 4
+    _numOfVtx       = 4;
     if (parent){
         _parent = parent;
         createEntity();
@@ -43,8 +46,7 @@ YCustomMesh::createEntity()
     _meshRenderer->setFirstInstance(0);
     _meshRenderer->setPrimitiveType(Qt3DRender::QGeometryRenderer::Triangles);
     _meshRenderer->setGeometry(_geom);
-    // 4 faces of 3 points
-    _meshRenderer->setVertexCount(12);
+    _meshRenderer->setVertexCount(_numOfVtx*_numOfVtxInFace);
 
     _meshEntity->addComponent(_meshRenderer);
     _meshEntity->addComponent(_transform);
@@ -67,7 +69,7 @@ YCustomMesh::createAttribs()
     _attrPos->setVertexSize(3);
     _attrPos->setByteOffset(0);
     _attrPos->setByteStride(9 * sizeof(float));
-    _attrPos->setCount(4);
+    _attrPos->setCount(_numOfVtx);
     _attrPos->setName(Qt3DRender::QAttribute::defaultPositionAttributeName());
 
     _attrNormal = new Qt3DRender::QAttribute();
@@ -77,7 +79,7 @@ YCustomMesh::createAttribs()
     _attrNormal->setVertexSize(3);
     _attrNormal->setByteOffset(3 * sizeof(float));
     _attrNormal->setByteStride(9 * sizeof(float));
-    _attrNormal->setCount(4);
+    _attrNormal->setCount(_numOfVtx);
     _attrNormal->setName(Qt3DRender::QAttribute::defaultNormalAttributeName());
 
     _attrColor = new Qt3DRender::QAttribute();
@@ -87,7 +89,7 @@ YCustomMesh::createAttribs()
     _attrColor->setVertexSize(3);
     _attrColor->setByteOffset(6 * sizeof(float));
     _attrColor->setByteStride(9 * sizeof(float));
-    _attrColor->setCount(4);
+    _attrColor->setCount(_numOfVtx);
     _attrColor->setName(Qt3DRender::QAttribute::defaultColorAttributeName());
 
     Qt3DRender::QAttribute *_attrIndex = new Qt3DRender::QAttribute();
@@ -97,7 +99,7 @@ YCustomMesh::createAttribs()
     _attrIndex->setVertexSize(1);
     _attrIndex->setByteOffset(0);
     _attrIndex->setByteStride(0);
-    _attrIndex->setCount(12);
+    _attrIndex->setCount(_numOfVtx*_numOfVtxInFace);
 
     _geom->addAttribute(_attrPos);
     _geom->addAttribute(_attrNormal);
@@ -110,7 +112,7 @@ YCustomMesh::createTestMesh()
 {
     bool result = false;
     QByteArray vertexBufferData;
-    vertexBufferData.resize(4 * (3 + 3 + 3) * sizeof(float));
+    vertexBufferData.resize(_numOfVtx * (3 + 3 + 3) * sizeof(float));
 
     // Vertices
     QVector3D v0(-1.0f, 0.0f, -1.0f);
@@ -153,7 +155,7 @@ YCustomMesh::createTestMesh()
 
     // Indices (12)
     QByteArray indexBufferData;
-    indexBufferData.resize(4 * 3 * sizeof(ushort));
+    indexBufferData.resize(_numOfVtx * _numOfVtxInFace * sizeof(ushort));
     ushort *rawIndexArray = reinterpret_cast<ushort *>(indexBufferData.data());
 
     // Front
