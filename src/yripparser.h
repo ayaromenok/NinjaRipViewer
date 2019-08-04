@@ -57,6 +57,8 @@ private:
     QStringList                 *_shaders;
 
     YCustomMesh                 *_mesh;
+    QByteArray                  *_baVBuffData;
+    QByteArray                  *_baIBuffData;
 };
 
 #endif // YRIPPARSER_H

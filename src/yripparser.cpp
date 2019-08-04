@@ -17,6 +17,8 @@ YRipParser::YRipParser(Qt3DCore::QEntity *parent)
     }
     _textures = new QStringList();
     _shaders = new QStringList();
+    _baVBuffData = new QByteArray();
+    _baIBuffData = new QByteArray();
 
 }
 
@@ -29,6 +31,16 @@ YRipParser::~YRipParser()
     _shaders->clear();
     if(_shaders->isEmpty()){
         delete _shaders;
+    }
+
+    _baVBuffData->clear();
+    if(_baVBuffData->isEmpty()){
+        delete _baVBuffData;
+    }
+
+    _baIBuffData->clear();
+    if(_baIBuffData->isEmpty()){
+        delete _baIBuffData;
     }
 }
 
@@ -194,12 +206,20 @@ bool
 YRipParser::parseRipFileIndexData(QFile &file)
 {
     bool result = false;
+    _baIBuffData->resize(_fcNum * 3 * sizeof(quint32));
+    _baIBuffData->fill(0x00);
+    quint32 *rawIndexArray = reinterpret_cast<quint32*>(_baIBuffData->data());
+
     for (quint32 i=0; i<_fcNum; i++){
         quint32 i0 = byte4LEtoUInt32(file.read(4));
         quint32 i1 = byte4LEtoUInt32(file.read(4));
         quint32 i2 = byte4LEtoUInt32(file.read(4));
         qInfo() << "face:" << i << "[" << i0 << i1 << i2 << "]";
+        rawIndexArray[i*3] = i0;
+        rawIndexArray[i*3+1] = i1;
+        rawIndexArray[i*3+2] = i2;
     }
+
     result = true;
     return result;
 }
@@ -234,7 +254,7 @@ YRipParser::createEntity()
     QByteArray vBuffData;
     QByteArray iBuffData;
     _mesh = new YCustomMesh(_parent);
-    _mesh->setMeshData(vBuffData, iBuffData);
+    _mesh->setMeshData(*_baVBuffData, *_baIBuffData);
     qInfo() << "mesh" << _mesh->childNodes();
 
     result = true;
