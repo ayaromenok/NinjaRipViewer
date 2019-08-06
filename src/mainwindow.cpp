@@ -60,7 +60,8 @@ MainWindow::createCentralWidget()
 
 
     _viewP = new View(this);
-    _viewP->setCamPersp();
+    //_viewP->setCamPersp();
+    _viewP->setCamFront();
 
     //loutCentral->addWidget(new QGroupBox(tr("Front"), this), 0, 0);
     loutCentral->addWidget(_viewP, 0, 0);
