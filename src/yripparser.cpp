@@ -254,7 +254,8 @@ bool
 YRipParser::parseRipFileVertexData(QFile &file)
 {
     bool result = false;
-    _baVBuffData->resize(_vtxNum * (3+3+3) * sizeof(float));
+    //V+C
+    _baVBuffData->resize(_vtxNum * (3+4) * sizeof(float));
     _baVBuffData->fill(0x00);
     float *rawVertexArray = reinterpret_cast<float*>(_baVBuffData->data());
 
@@ -262,24 +263,45 @@ YRipParser::parseRipFileVertexData(QFile &file)
         float vx = byte4LEtoFloat32(file.read(4));
         float vy = byte4LEtoFloat32(file.read(4));
         float vz = byte4LEtoFloat32(file.read(4));
-        float nx = byte4LEtoFloat32(file.read(4));
-        float ny = byte4LEtoFloat32(file.read(4));
-        float nz = byte4LEtoFloat32(file.read(4));
-        float tcU = byte4LEtoFloat32(file.read(4));
-        float tcV = byte4LEtoFloat32(file.read(4));
-
-        qInfo() << "v:" << i << "pos:" << vx << vy << vz <<
-                   "n:" << nx << ny << nz << "tc0:" << tcU << tcV;
-
+        qInfo() << "v:" << i << "pos:" << vx << vy << vz;
         rawVertexArray[i*3] = vx;
         rawVertexArray[i*3+1] = vy;
         rawVertexArray[i*3+2] = vz;
-        rawVertexArray[i*3+3] = nx;
-        rawVertexArray[i*3+4] = ny;
-        rawVertexArray[i*3+5] = nz;
-        rawVertexArray[i*3+6] = tcU;
-        rawVertexArray[i*3+7] = tcV;
-        rawVertexArray[i*3+8] = 0.0f;
+
+        if (_isNormalPresent){
+            float nx = byte4LEtoFloat32(file.read(4));
+            float ny = byte4LEtoFloat32(file.read(4));
+            float nz = byte4LEtoFloat32(file.read(4));
+
+           //\todo add N's
+        }
+        if (_isColorPresent){
+            float cr = byte4LEtoFloat32(file.read(4));
+            float cg = byte4LEtoFloat32(file.read(4));
+            float cb = byte4LEtoFloat32(file.read(4));
+            float ca = byte4LEtoFloat32(file.read(4));
+            rawVertexArray[i*3+3] = cr;
+            rawVertexArray[i*3+4] = cg;
+            rawVertexArray[i*3+5] = cb;
+            rawVertexArray[i*3+6] = ca;
+            qInfo() << "v:" << i << "color:" << cr << cg << cb << ca;
+        }
+        if (_isTC0Present){
+            float tcU = byte4LEtoFloat32(file.read(4));
+            float tcV = byte4LEtoFloat32(file.read(4));
+            //\todo add TC's
+        }
+
+
+                   //"n:" << nx << ny << nz << "tc0:" << tcU << tcV;
+
+
+//        rawVertexArray[i*3+3] = nx;
+//        rawVertexArray[i*3+4] = ny;
+//        rawVertexArray[i*3+5] = nz;
+//        rawVertexArray[i*3+6] = tcU;
+//        rawVertexArray[i*3+7] = tcV;
+//        rawVertexArray[i*3+8] = 0.0f;
     }
     result = true;
     return result;
