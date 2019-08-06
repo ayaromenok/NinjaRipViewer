@@ -185,7 +185,7 @@ YRipParser::parseRipFileVAttribHeader(QFile &file)
                     _cR = offset/4;
                     _cG = _cR + 1;
                     _cB = _cR + 2;
-                    _cA = _cR + 2;
+                    _cA = _cR + 3;
                     _cTemp++;
                     _isColorPresent = true;
                 }
