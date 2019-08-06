@@ -19,7 +19,9 @@ YRipParser::YRipParser(Qt3DCore::QEntity *parent)
     _shaders = new QStringList();
     _baVBuffData = new QByteArray();
     _baIBuffData = new QByteArray();
-
+    _isNormalPresent = false;
+    _isTC0Present = false;
+    _isColorPresent = false;
 }
 
 YRipParser::~YRipParser()
@@ -134,6 +136,7 @@ YRipParser::parseRipFileVAttribHeader(QFile &file)
     _vTemp = 0;
     _nTemp = 0;
     _tcTemp = 0;
+    _cTemp = 0;
     quint32 index, offset, size, numOfElem;
     for (quint32 i=0; i<_vAttrNum; i++){
         string.clear();
@@ -165,19 +168,42 @@ YRipParser::parseRipFileVAttribHeader(QFile &file)
                     _nY = _nX + 1;
                     _nZ = _nX + 2;
                     _nTemp++;
+                    _isNormalPresent = true;
                 }
+
             }
             if (string.contains("TEXCOORD")){
                 if (0 == _tcTemp){
                     _tcU = offset/4;
                     _tcV = _tcU + 1;
                     _tcTemp++;
+                    _isTC0Present = true;
                 }
+            }
+            if (string.contains("COLOR")){
+                if (0 == _cTemp){
+                    _cR = offset/4;
+                    _cG = _cR + 1;
+                    _cB = _cR + 2;
+                    _cA = _cR + 2;
+                    _cTemp++;
+                    _isColorPresent = true;
+                }
+
             }
         }
     }
-    qInfo() << "v" << _vX << _vY << _vZ << "n" << _nX << _nY << _nZ
-            << "tc" << _tcU << _tcV;
+    qInfo() << "v" << _vX << _vY << _vZ;
+    if (_isNormalPresent) {
+        qInfo() << "n" << _nX << _nY << _nZ;
+    }
+    if (_isColorPresent) {
+        qInfo() << "c" << _cR << _cG << _cB << _cA;
+    }
+    if (_isTC0Present) {
+        qInfo() << "tc" << _tcU << _tcV;
+    }
+
 
     //textures
     if (_texNum >0) {

@@ -44,15 +44,26 @@ private:
     quint32                     _vZ;
     quint32                     _vTemp;
 
+    bool                        _isNormalPresent;
     quint32                     _nX;
     quint32                     _nY;
     quint32                     _nZ;
     quint32                     _nTemp;
 
+    bool                        _isTC0Present;
     quint32                     _tcU;
     quint32                     _tcV;
     quint32                     _tcTemp;
 
+    bool                        _isColorPresent;
+    quint32                     _cR;
+    quint32                     _cG;
+    quint32                     _cB;
+    quint32                     _cA;
+    quint32                     _cTemp;
+
+   //bool                        _isTC1Present;
+   // bool                        _isTBNPresent;
     QStringList                 *_textures;
     QStringList                 *_shaders;
 
