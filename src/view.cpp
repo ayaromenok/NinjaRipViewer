@@ -96,10 +96,9 @@ View::captureToFile()
 
 void
 View::onCaptureCompleted() {
-    QDateTime dt;
     _fNameScr.clear();
     _fNameScr.append("screenshot");
-    _fNameScr.append(QString::number(_captureReply->captureId()));
+    _fNameScr.append(QString::number(QDateTime::currentMSecsSinceEpoch()));
     _fNameScr.append(".jpg");
 
     if (_captureReply->isComplete()) {
